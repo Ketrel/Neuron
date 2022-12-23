@@ -84,7 +84,7 @@ function Neuron:HideBlizzardUI(profileDatabase)
 		-- disableBarFrame(MultiCastActionBarFrame)
 
 		--disable the ActionBarController to avoid potential for taint
-		ActionBarController:UnregisterAllEvents()
+		--ActionBarController:UnregisterAllEvents()
 
 		--these two get called when opening the spellbook so it's best to just silence them ahead of time
 		if not Neuron:IsHooked("MultiActionBar_ShowAllGrids") then
