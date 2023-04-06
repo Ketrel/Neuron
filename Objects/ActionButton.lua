@@ -240,7 +240,7 @@ function ActionButton:SetupEvents()
 
 	self:RegisterEvent("UPDATE_MACROS")
 
-	self:RegisterEvent("ACTIONBAR_SLOT_CHANGED", "UpdateAll")
+	--self:RegisterEvent("ACTIONBAR_SLOT_CHANGED", "UpdateAll")
 	self:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN", "UpdateCooldown")
 
 	self:RegisterEvent("SPELL_UPDATE_CHARGES", "UpdateCount")
