@@ -69,6 +69,8 @@ function Bar.new(class, barID)
 	newBar:SetWidth(375)
 	newBar:SetHeight(40)
 	newBar:EnableKeyboard(false)
+
+    newBar:ClearAllPoints()
 	newBar:SetPoint("CENTER", "UIParent", "CENTER", 0, 0)
 
 	newBar:SetScript("OnShow", function(self) self:OnShow() end)
