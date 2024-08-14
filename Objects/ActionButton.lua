@@ -418,10 +418,10 @@ end
 
 function ActionButton:StopGlow()
 	if self.bar:GetSpellGlow() == "default" then
-		ActionButton_HideOverlayGlow(self)
+		--ActionButton_HideOverlayGlow(self)
 	else
 		self.Shine:Hide()
-		AutoCastShine_AutoCastStop(self.Shine);
+		--AutoCastShine_AutoCastStop(self.Shine);
 	end
 end
 
@@ -560,6 +560,7 @@ function ActionButton:AutoWriteMacro(spell)
 	if Neuron.spellCache[spell:lower()] then
 		spellName = Neuron.spellCache[spell:lower()].spellName
 		spellID = Neuron.spellCache[spell:lower()].spellID
+        print(spellID)
 
 		altName = Neuron.spellCache[spell:lower()].altName
 		altSpellID = Neuron.spellCache[spell:lower()].altSpellID
@@ -789,9 +790,11 @@ function ActionButton.ExtractMacroData(macro)
 			elseif Neuron.spellCache[abilityOrItem:lower()] then
 				spell = abilityOrItem
 				spellID = Neuron.spellCache[abilityOrItem:lower()].spellID
-			elseif GetSpellInfo(abilityOrItem) then
+			elseif C_Spell.GetSpellInfo(abilityOrItem) then
 				spell = abilityOrItem
-				_,_,_,_,_,_,spellID = GetSpellInfo(abilityOrItem)
+                local spellInfo = C_Spell.GetSpellInfo(abilityOrItem)
+                spellID = spellInfo.spellID
+				--_,_,_,_,_,_,spellID = C_Spell.GetSpellInfo(abilityOrItem)
 			end
 		end
 	end
@@ -922,7 +925,7 @@ function ActionButton.GetSpellAppearance(spell)
 	local border = nil
 
 	---@type number|string|nil
-	local texture = GetSpellTexture(spell)
+	local texture = C_Spell.GetSpellTexture(spell)
 
 	if not texture then
 		if Neuron.spellCache[spell:lower()] then

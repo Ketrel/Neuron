@@ -109,7 +109,8 @@
 		</Layers>
 
 		<Frames>
-			<Frame name="$parentShine" parentKey="Shine" inherits="AutoCastShineTemplate">
+			<!--<Frame name="$parentShine" parentKey="Shine" inherits="AutoCastShineTemplate">-->
+			<Frame name="$parentShine" parentKey="Shine">
 				<Size x="36" y="36"/>
 				<Anchors>
 					<Anchor point="CENTER" x="0" y="0"/>

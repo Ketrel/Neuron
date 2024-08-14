@@ -191,7 +191,7 @@ function Neuron:PLAYER_ENTERING_WORLD()
 	Neuron:UpdateStanceStrings()
 
 	--Fix for Titan causing the Main Bar to not be hidden
-	if IsAddOnLoaded("Titan") then
+	if C_AddOns.IsAddOnLoaded("Titan") then
 		TitanUtils_AddonAdjust("MainMenuBar", true)
 	end
 
@@ -290,80 +290,128 @@ end
 ---	If a spell is not displaying its tooltip or cooldown, then the spell in the macro probably is not in the database
 function Neuron:UpdateSpellCache()
 	local sIndexMax = 0
-	local numTabs = GetNumSpellTabs()
 
-	for i=1,numTabs do
-		local _, _, _, numSlots = GetSpellTabInfo(i)
-
+	for i = 1, C_SpellBook.GetNumSpellBookSkillLines() do
+		local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(i)
+		local offset, numSlots = skillLineInfo.itemIndexOffset, skillLineInfo.numSpellBookItems
 		sIndexMax = sIndexMax + numSlots
-	end
-
-	for i = 1,sIndexMax do
-		local spellName, _ = GetSpellBookItemName(i, BOOKTYPE_SPELL) --this returns the baseSpell name, even if it is augmented by talents. I.e. Roll and Chi Torpedo
-		local spellType, spellID = GetSpellBookItemInfo(i, BOOKTYPE_SPELL)
-		local isPassive
-		if spellName then
-			isPassive = IsPassiveSpell(i, BOOKTYPE_SPELL)
-		end
-		local icon = GetSpellTexture(spellID)
-
-		local altName
-		local altSpellID
-		local altIcon
-
-		if (spellName and spellType ~= "FUTURESPELL") and not isPassive then
-
-			altName, _, altIcon, _, _, _, altSpellID = GetSpellInfo(spellName)
-
-			if spellID == altSpellID then
-				altSpellID = nil
-				altName = nil
-				altIcon = nil
+		for j = offset+1, offset+numSlots do
+			local spellName
+			local spellBookItemInfo = C_SpellBook.GetSpellBookItemInfo(j, Enum.SpellBookSpellBank.Player)
+			local spellName = spellBookItemInfo.name
+			local spellType = spellBookItemInfo.itemType
+			local isPassive = spellBookItemInfo.isPassive
+			local spellID
+			if spellBookItemInfo.spellID then
+				spellID = spellBookItemInfo.spellID
+			else
+				spellID = spellBookItemInfo.actionID
 			end
-
-			local spellData = Neuron:SetSpellInfo(i, BOOKTYPE_SPELL, spellType, spellName, spellID, icon, altName, altSpellID, altIcon)
-
-			Neuron.spellCache[(spellName):lower()] = spellData
-			Neuron.spellCache[(spellName):lower().."()"] = spellData
-
-
-			--reverse main and alt so we can put both in the table accurately
-			local altSpellData = Neuron:SetSpellInfo(i, BOOKTYPE_SPELL, spellType, altName, altSpellID, altIcon, spellName, spellID, icon)
-
-			if altName and altName ~= spellName then
-				Neuron.spellCache[(altName):lower()] = altSpellData
-				Neuron.spellCache[(altName):lower().."()"] = altSpellData
-			end
-
-		end
-	end
-
-	if Neuron.isWoWRetail then
-		for i = 1, select("#", GetProfessions()) do
-			local index = select(i, GetProfessions())
-
-			if index then
-				local _, _, _, _, numSpells, spelloffset = GetProfessionInfo(index)
-
-				for j=1,numSpells do
-
-					local offsetIndex = j + spelloffset
-					local spellName, _ = GetSpellBookItemName(offsetIndex, BOOKTYPE_PROFESSION)
-					local spellType, spellID = GetSpellBookItemInfo(offsetIndex, BOOKTYPE_PROFESSION)
-					local icon
-
-					if spellName and spellType ~= "FUTURESPELL" then
-						icon = GetSpellTexture(spellID)
-						local spellData = Neuron:SetSpellInfo(offsetIndex, BOOKTYPE_PROFESSION, spellType, spellName, spellID, icon,nil,  nil, nil)
-
-						Neuron.spellCache[(spellName):lower()] = spellData
-						Neuron.spellCache[(spellName):lower().."()"] = spellData
-
-					end
-				end
+--            if spellName == "Crusading Strikes" then
+--                DevTools_Dump(spellBookItemInfo)
+--                print('=====')
+--            end
+--            if spellName == "Hammer of Justice" then
+--                DevTools_Dump(spellBookItemInfo)
+--                print('=====')
+--            end
+			if spellName and not isPassive then
+				local spellData = Neuron:SetSpellInfo(j, "spell", spellType, spellName, spellID, icon, nil, nil, nil)
+				Neuron.spellCache[(spellName):lower()] = spellData
+				Neuron.spellCache[(spellName):lower().."()"] = spellData
 			end
 		end
 	end
+
+--    --sIndexMax = sIndexMax + C_SpellBook.GetNumSpellBookSkillLines()
+--	for i = 1,sIndexMax do
+--        local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(i)
+--		local spellInfo = C_SpellBook.GetSpellBookItemInfo(i,0)
+--        local spellName = spellInfo.name
+--
+--        if spellInfo.spellID == nil then
+--            spellInfo.spellID = spellInfo.actionID
+--        end
+--
+--		local isPassive
+--		if spellName then
+--			isPassive = spellName.isPassive
+--		end
+--        local icon = spellInfo.iconID
+--
+--		local altName
+--		local altSpellID
+--		local altIcon
+--
+--		--if (spellName and spellType ~= "FUTURESPELL") and not isPassive then
+--        if spellName and not isPassive then
+--
+--			altName, _, altIcon, _, _, _, altSpellID = C_Spell.GetSpellInfo(spellName)
+--
+--			if spellID == altSpellID then
+--				altSpellID = nil
+--				altName = nil
+--				altIcon = nil
+--			end
+--
+--			--local spellData = Neuron:SetSpellInfo(i, BOOKTYPE_SPELL, spellType, spellName, spellID, icon, altName, altSpellID, altIcon)
+--			local spellData = Neuron:SetSpellInfo(i, "spell", spellType, spellName, spellID, icon, altName, altSpellID, altIcon)
+--
+--			Neuron.spellCache[(spellName):lower()] = spellData
+--			Neuron.spellCache[(spellName):lower().."()"] = spellData
+--
+--
+--			--reverse main and alt so we can put both in the table accurately
+--			--local altSpellData = Neuron:SetSpellInfo(i, BOOKTYPE_SPELL, spellType, altName, altSpellID, altIcon, spellName, spellID, icon)
+--			local altSpellData = Neuron:SetSpellInfo(i, "spell", spellType, altName, altSpellID, altIcon, spellName, spellID, icon)
+--
+--			if altName and altName ~= spellName then
+--				Neuron.spellCache[(altName):lower()] = altSpellData
+--				Neuron.spellCache[(altName):lower().."()"] = altSpellData
+--			end
+--
+--		end
+--	end
+
+if Neuron.isWoWRetail then
+    --local sIndexMin = sIndexMax + 1
+    local mountIDs = C_MountJournal.GetMountIDs()
+    for i = 1,#mountIDs do
+        local mountName, mountSpellID, mountIcon, mountIsActive, mountIsUsable, _  = C_MountJournal.GetMountInfoByID(mountIDs[i])
+        local spellData = Neuron:SetSpellInfo(sIndexMax + i, "spell", nil, mountName, mountSpellID, mountIcon, nil, nil, nil)
+        Neuron.spellCache[(mountName):lower()] = spellData
+        Neuron.spellCache[(mountName):lower().."()"] = spellData
+    end
+end
+
+-- THIS is broken in 11.0.0
+
+--	if Neuron.isWoWRetail then
+--		for i = 1, select("#", GetProfessions()) do
+--			local index = select(i, GetProfessions())
+--
+--			if index then
+--				local _, _, _, _, numSpells, spelloffset = GetProfessionInfo(index)
+--
+--				for j=1,numSpells do
+--
+--					local offsetIndex = j + spelloffset
+--					local spellName, _ = GetSpellBookItemName(offsetIndex, BOOKTYPE_PROFESSION)
+--					local spellType, spellID = GetSpellBookItemInfo(offsetIndex, BOOKTYPE_PROFESSION)
+--					local icon
+--
+--					if spellName and spellType ~= "FUTURESPELL" then
+--						icon = GetSpellTexture(spellID)
+--						local spellData = Neuron:SetSpellInfo(offsetIndex, BOOKTYPE_PROFESSION, spellType, spellName, spellID, icon,nil,  nil, nil)
+--
+--						Neuron.spellCache[(spellName):lower()] = spellData
+--						Neuron.spellCache[(spellName):lower().."()"] = spellData
+--
+--					end
+--				end
+--			end
+--		end
+--	end
 end
 
 function Neuron:ToggleMainMenu()

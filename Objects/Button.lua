@@ -126,7 +126,9 @@ function Button:SetCooldownTimer(start, duration, enable, modrate, showCountdown
 		return
 	end
 
-	if start and start > 0 and duration > 0 and enable > 0 then
+	--if start and start > 0 and duration > 0 and enable > 0 then
+	--if start and start > 0 and duration > 0 and enable == true then
+	if start and type(start) ~= "table" and start > 0 and duration > 0 and enable == true then
 
 		if duration > 2 then --sets non GCD cooldowns
 			if charges and charges > 0 and maxCharges > 1 then
@@ -494,8 +496,8 @@ end
 
 ---Updates the buttons "count", i.e. the spell charges
 function Button:UpdateSpellCount()
-	local charges, maxCharges = GetSpellCharges(self.spell)
-	local count = GetSpellCount(self.spell)
+	local charges, maxCharges = C_Spell.GetSpellCharges(self.spell)
+	local count = C_Spell.GetSpellCastCount(self.spell)
 
 	if maxCharges and maxCharges > 1 then
 		self.Count:SetText(charges)
@@ -548,8 +550,8 @@ end
 
 function Button:UpdateSpellCooldown()
 	if self.spell and self.isShown then
-		local start, duration, enable, modrate = GetSpellCooldown(self.spell)
-		local charges, maxCharges, chStart, chDuration, chargemodrate = GetSpellCharges(self.spell)
+		local start, duration, enable, modrate = C_Spell.GetSpellCooldown(self.spell)
+		local charges, maxCharges, chStart, chDuration, chargemodrate = C_Spell.GetSpellCharges(self.spell)
 
 		if charges and maxCharges and maxCharges > 0 and charges < maxCharges then
 			self:SetCooldownTimer(chStart, chDuration, enable, chargemodrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges, maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
@@ -606,14 +608,15 @@ function Button:UpdateUsable()
 end
 
 function Button:UpdateUsableSpell()
-	local isUsable, notEnoughMana = IsUsableSpell(self.spell)
+	--local isUsable, notEnoughMana = IsUsableSpell(self.spell)
+	local isUsable, notEnoughMana = C_Spell.IsSpellUsable(self.spell)
 
 	if notEnoughMana and self.bar:GetManaColor() then
 		self.Icon:SetVertexColor(self.bar:GetManaColor()[1], self.bar:GetManaColor()[2], self.bar:GetManaColor()[3])
 	elseif isUsable then
-		if self.bar:GetShowRangeIndicator() and IsSpellInRange(self.spell, self.unit) == 0 then
+		if self.bar:GetShowRangeIndicator() and C_Spell.IsSpellInRange(self.spell, self.unit) == 0 then
 			self.Icon:SetVertexColor(self.bar:GetRangeColor()[1], self.bar:GetRangeColor()[2], self.bar:GetRangeColor()[3])
-		elseif self.bar:GetShowRangeIndicator() and Neuron.spellCache[self.spell:lower()] and IsSpellInRange(Neuron.spellCache[self.spell:lower()].index,"spell", self.unit) == 0 then
+		elseif self.bar:GetShowRangeIndicator() and Neuron.spellCache[self.spell:lower()] and C_Spell.IsSpellInRange(Neuron.spellCache[self.spell:lower()].index,"spell", self.unit) == 0 then
 			self.Icon:SetVertexColor(self.bar:GetRangeColor()[1], self.bar:GetRangeColor()[2], self.bar:GetRangeColor()[3])
 		else
 			self.Icon:SetVertexColor(1.0, 1.0, 1.0)
@@ -702,7 +705,7 @@ function Button:UpdateStatus()
 end
 
 function Button:UpdateSpellStatus()
-	if IsCurrentSpell(self.spell) or IsAutoRepeatSpell(self.spell) then
+	if C_Spell.IsCurrentSpell(self.spell) or C_Spell.IsAutoRepeatSpell(self.spell) then
 		self:SetChecked(true)
 	else
 		self:SetChecked(false)
@@ -802,8 +805,11 @@ function Button:UpdateSpellTooltip()
 		end
 	elseif Neuron.spellCache[self.spell:lower()] then --if the spell isn't in the spellbook, check our spell cache
 		if self.bar:GetTooltipOption() == "normal" then
-			GameTooltip:SetSpellByID(Neuron.spellCache[self.spell:lower()].spellID)
+            if Neuron.spellCache[self.spell:lower()].spellID ~= nil then
+                GameTooltip:SetSpellByID(Neuron.spellCache[self.spell:lower()].spellID)
+            end
 		elseif self.bar:GetTooltipOption() == "minimal" then
+            print(Neuron.spellCache[self.spell:lower()].spellName)
 			GameTooltip:SetText(Neuron.spellCache[self.spell:lower()].spellName, 1, 1, 1)
 		end
 	else
