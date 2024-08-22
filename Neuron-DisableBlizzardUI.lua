@@ -165,12 +165,12 @@ function Neuron:HideBlizzardUI(profileDatabase)
 	end
 	if not blizzBars.MirrorBar then
 		UIParent:UnregisterEvent("MIRROR_TIMER_START")
-		MirrorTimer1:UnregisterAllEvents()
-		MirrorTimer1:SetParent(Neuron.hiddenFrame)
-		MirrorTimer2:UnregisterAllEvents()
-		MirrorTimer2:SetParent(Neuron.hiddenFrame)
-		MirrorTimer3:UnregisterAllEvents()
-		MirrorTimer3:SetParent(Neuron.hiddenFrame)
+--		MirrorTimer1:UnregisterAllEvents()
+--		MirrorTimer1:SetParent(Neuron.hiddenFrame)
+--		MirrorTimer2:UnregisterAllEvents()
+--		MirrorTimer2:SetParent(Neuron.hiddenFrame)
+--		MirrorTimer3:UnregisterAllEvents()
+--		MirrorTimer3:SetParent(Neuron.hiddenFrame)
 	end
 	if not blizzBars.PetBar then
 		disableBarFrame(PetActionBar)
