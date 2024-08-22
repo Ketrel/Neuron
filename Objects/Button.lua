@@ -741,16 +741,17 @@ function Button:UpdateActionStatus()
 		--find out the action name
 		local type, id, _ = GetActionInfo(self.actionID)
 		if type == "spell" then
-			name = GetSpellInfo(id)
+			name = C_Spell.GetSpellInfo(id)
 		elseif type == "item" then
-			name = GetItemInfo(id)
+			name = C_Item.GetItemInfo(id)
 		end
 	else
 		self:SetChecked(false)
 	end
 
 	if name then
-		self.Name:SetText(name)
+		--self.Name:SetText(name)
+		self.Name:SetText(name.name)
 	else
 		self.Name:SetText("")
 	end
