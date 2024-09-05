@@ -483,7 +483,8 @@ function ActionButton:SetMouseCursor()
 	ClearCursor()
 
 	if self.spell and self.spellID then
-		PickupSpell(self.spellID)
+		--PickupSpell(self.spellID)
+		C_Spell.PickupSpell(self.spellID)
 		if GetCursorInfo() then
 			return
 		end
