@@ -550,14 +550,23 @@ end
 
 function Button:UpdateSpellCooldown()
 	if self.spell and self.isShown then
-		local start, duration, enable, modrate = C_Spell.GetSpellCooldown(self.spell)
-		local charges, maxCharges, chStart, chDuration, chargemodrate = C_Spell.GetSpellCharges(self.spell)
+		--local start, duration, enable, modrate = C_Spell.GetSpellCooldown(self.spell)
+		local cooldown = C_Spell.GetSpellCooldown(self.spell)
+		--local charges, maxCharges, chStart, chDuration, chargemodrate = C_Spell.GetSpellCharges(self.spell)
+		local charges = C_Spell.GetSpellCharges(self.spell)
 
-		if charges and maxCharges and maxCharges > 0 and charges < maxCharges then
-			self:SetCooldownTimer(chStart, chDuration, enable, chargemodrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges, maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
-		else
-			self:SetCooldownTimer(start, duration, enable, modrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha()) --call standard cooldown, handles both abilty cooldowns and GCD
-		end
+        if cooldown then
+            if charges and charges.currentCharges and charges.maxCharges and charges.maxCharges > 0 and charges.currentCharges < charges.maxCharges then
+                --self:SetCooldownTimer(chStart, chDuration, enable, chargemodrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges, maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
+                self:SetCooldownTimer(charges.cooldownStartTime, charges.cooldownDuration, cooldown.isEnabled, charges.chargeModRate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges.charges, charges.maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
+            else
+                --self:SetCooldownTimer(start, duration, enable, modrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha()) --call standard cooldown, handles both abilty cooldowns and GCD
+                self:SetCooldownTimer(cooldown.startTime, cooldown.duration, cooldown.isEnabled, cooldown.modRate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha()) --call standard cooldown, handles both abilty cooldowns and GCD
+
+            end
+        else
+            --do nothing
+        end
 	else
 		self:CancelCooldownTimer(true)
 	end
