@@ -579,9 +579,12 @@ function Button:UpdateItemCooldown()
 			start, duration, enable, modrate = C_Container.GetItemCooldown(Neuron.itemCache[self.item:lower()])
 		else
 			local itemID = GetItemInfoInstant(self.item)
-			start, duration, enable, modrate = C_Container.GetItemCooldown(itemID)
+			start, duration, enable = C_Container.GetItemCooldown(itemID)
 		end
-		self:SetCooldownTimer(start, duration, enable, modrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha())
+        if enable == 1 then
+            enable = true
+        end
+		self:SetCooldownTimer(start, duration, enable, 1, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha())
 	else
 		self:CancelCooldownTimer(true)
 	end
@@ -829,15 +832,26 @@ end
 
 function Button:UpdateItemTooltip()
 	local name, link = GetItemInfo(self.item)
-	name = name or Neuron.itemCache[self.item:lower()]
-	link = link or "item:"..name..":0:0:0:0:0:0:0"
+    local itemID = GetItemInfoInstant(self.item)
+    local isToy = false
+
+    name = name or Neuron.itemCache[self.item:lower()]
+    link = link or "item:"..name..":0:0:0:0:0:0:0"
 
 	if not name or not link then
 		return
 	end
 
+    if C_ToyBox.GetToyInfo(itemID) then
+        isToy = true
+    end
+
 	if self.bar:GetTooltipOption() == "normal" then
-		GameTooltip:SetHyperlink(link)
+        if isToy then
+            GameTooltip:SetToyByItemID(itemID)
+        else
+            GameTooltip:SetHyperlink(link)
+        end
 	elseif self.bar:GetTooltipOption() == "minimal" then
 		GameTooltip:SetText(name, 1, 1, 1)
 	end
