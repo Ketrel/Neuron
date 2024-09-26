@@ -367,7 +367,8 @@ function ActionButton:PlaceMount(action1, action2)
 	if action1 == 0 or not mountSpellID or mountSpellID == 0 then
 		return
 	else
-		mountSpell = GetSpellInfo(mountSpellID)
+		--mountSpell = GetSpellInfo(mountSpellID)
+		mountSpell = C_Spell.GetSpellInfo(mountSpellID).name
 	end
 
 	--The Summon Random Mount from the Mount Journal
