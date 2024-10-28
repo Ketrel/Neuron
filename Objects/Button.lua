@@ -842,6 +842,10 @@ function Button:UpdateItemTooltip()
 		return
 	end
 
+    if itemID == nil then
+        GameTooltip:SetText("Can't generate tooltip for item:\n    "..self.item.."\n    Planned work around in future.", 1, 1 ,1)
+        return
+    end
     if C_ToyBox.GetToyInfo(itemID) then
         isToy = true
     end
