@@ -99,7 +99,7 @@ function RepButton:UpdateData(repGainedString)
 		[9] = { l="Paragon", r=1, g=0.5, b=0},
 	}
 
-	if GetNumFactions() <= 0 then --quit if for some reason the number of known factions is 0 or less (should never happen, this is just for safety)
+	if C_Reputation.GetNumFactions() <= 0 then --quit if for some reason the number of known factions is 0 or less (should never happen, this is just for safety)
 		return
 	end
 
@@ -107,8 +107,9 @@ function RepButton:UpdateData(repGainedString)
 
 	local header --we set this on each header to categorize all the factions that follow
 
-	for i=1, GetNumFactions() do
-		local name, _, standingID, min, max, value, _, _, isHeader, _, hasRep, _, isChild, factionID = GetFactionInfo(i)
+	for i=1, C_Reputation.GetNumFactions() do
+		--local name, _, standingID, min, max, value, _, _, isHeader, _, hasRep, _, isChild, factionID = C_Reputation.GetFactionDataByIndex(i)
+		local factionID, name, _, standingID, min, max, value, _, _, isHeader, _, hasRep, _, isChild = C_Reputation.GetFactionDataByIndex(i)
 		local colors = {}
 
 		if not standingID then --not sure if we will ever be in a position where standingID comes back as nil, but if so, protect for it.
@@ -128,11 +129,14 @@ function RepButton:UpdateData(repGainedString)
 			end
 		end
 
-		if (not isHeader or hasRep) and not IsFactionInactive(i) then
+		if (not isHeader or hasRep) and C_Reputation.IsFactionActive(i) then
 
 			local friendID, standing, isParagon
 			if Neuron.isWoWRetail then --classic doesn't have Friendships or Paragon, carefull
-				friendID, _, _, _, _, _, standing, _, _ = C_GossipInfo.GetFriendshipReputation(factionID)
+				reputationInfo = C_GossipInfo.GetFriendshipReputation(factionID)
+                friendID = reputationInfo.friendID
+                standing = reputationInfo.standing
+				--friendID, _, _, _, _, _, standing, _, _ = C_GossipInfo.GetFriendshipReputation(factionID)
 				isParagon = C_Reputation.IsFactionParagon(factionID)
 			end
 

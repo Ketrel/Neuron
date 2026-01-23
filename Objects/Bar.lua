@@ -117,14 +117,16 @@ end
 -----------------------------------
 
 function Bar:ACTIVE_TALENT_GROUP_CHANGED()
-	if self.handler:GetAttribute("assertstate") then
-		self.handler:SetAttribute("state-"..self.handler:GetAttribute("assertstate"), self.handler:GetAttribute("activestate") or "homestate")
-	end
+    if not InCombatLockdown() then
+        if self.handler:GetAttribute("assertstate") then
+            self.handler:SetAttribute("state-"..self.handler:GetAttribute("assertstate"), self.handler:GetAttribute("activestate") or "homestate")
+        end
 
-	for _,button in pairs(self.buttons) do
-		button:UpdateButtonSpec()
-	end
-	self:Load()
+        for _,button in pairs(self.buttons) do
+            button:UpdateButtonSpec()
+        end
+        self:Load()
+    end
 end
 
 function Bar:ACTIONBAR_SHOWHIDEGRID(show)

@@ -100,7 +100,7 @@ function ZoneAbilityButton:UpdateData()
 	end
 
 	if self.spellID then
-		self.spell = GetSpellInfo(self.spellID);
+		self.spell,_,_,_,_,_,_ = C_Spell.GetSpellInfo(self.spellID).name;
 		if self.spell and not InCombatLockdown() then
 			self:SetAttribute("macrotext1", "/cast " .. self.spell .. "();")
 		end
@@ -130,7 +130,10 @@ end
 
 --overwrite function in parent class Button
 function ZoneAbilityButton:UpdateIcon()
-	local spellTexture = GetSpellTexture(self.spellID)
+    if self.spellID == nil then
+        return
+    end
+	local spellTexture = C_Spell.GetSpellTexture(self.spellID)
 	self.Icon:SetTexture(spellTexture);
 
 	local texture = self.textureKit or "Interface\\ExtraButton\\GarrZoneAbility-Armory"

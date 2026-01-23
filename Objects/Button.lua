@@ -285,8 +285,10 @@ function Button:LoadDataFromDatabase(curSpec, curState)
 		self.data = self.statedata[curState] --loads a single state of a single spec into self.data
 
 		for state, data in pairs(self.statedata) do
-			self:SetAttribute(state.."-macro_Text", data.macro_Text)
-			self:SetAttribute(state.."-actionID", data.actionID)
+            --if not InCombatLockdown() then
+                self:SetAttribute(state.."-macro_Text", data.macro_Text)
+                self:SetAttribute(state.."-actionID", data.actionID)
+            --end
 		end
 	end
 end

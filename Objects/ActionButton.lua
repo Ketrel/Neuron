@@ -382,28 +382,33 @@ function ActionButton:ClearButton(clearAttributes)
 end
 
 function ActionButton:UpdateGlow()
-	if self.bar:GetSpellGlow() and self.spellID then
-		--druid fix for thrash glow not showing for feral druids.
-		--Thrash Guardian: 77758
-		--Thrash Feral: 106832
-		--But the joint thrash is 106830 (this is the one that results true when the ability is procced)
+    --just flat out doing nothing here
+    return
+    --broken beyond my knowledge to fix
 
-		--Swipe(Bear): 213771
-		--Swipe(Cat): 106785
-		--Swipe(NoForm): 213764
 
-		if self.spell and self.spell:lower() == "thrash()" and IsSpellOverlayed(106830) then --this is a hack for feral druids (Legion patch 7.3.0. Bug reported)
-			self:StartGlow()
-		elseif self.spell and self.spell:lower() == "swipe()" and IsSpellOverlayed(106785) then --this is a hack for feral druids (Legion patch 7.3.0. Bug reported)
-			self:StartGlow()
-		elseif IsSpellOverlayed(self.spellID) then --this is the default "true" condition
-			self:StartGlow()
-		else --this is the default "false" condition
-			self:StopGlow()
-		end
-	else --this stops the glow on buttons that have no spellID's, i.e. when switching states and a procced ability is overlapping an empty button
-		self:StopGlow()
-	end
+--	if self.bar:GetSpellGlow() and self.spellID then
+--		--druid fix for thrash glow not showing for feral druids.
+--		--Thrash Guardian: 77758
+--		--Thrash Feral: 106832
+--		--But the joint thrash is 106830 (this is the one that results true when the ability is procced)
+--
+--		--Swipe(Bear): 213771
+--		--Swipe(Cat): 106785
+--		--Swipe(NoForm): 213764
+--
+--		if self.spell and self.spell:lower() == "thrash()" and IsSpellOverlayed(106830) then --this is a hack for feral druids (Legion patch 7.3.0. Bug reported)
+--			self:StartGlow()
+--		elseif self.spell and self.spell:lower() == "swipe()" and IsSpellOverlayed(106785) then --this is a hack for feral druids (Legion patch 7.3.0. Bug reported)
+--			self:StartGlow()
+--		elseif IsSpellOverlayed(self.spellID) then --this is the default "true" condition
+--			self:StartGlow()
+--		else --this is the default "false" condition
+--			self:StopGlow()
+--		end
+--	else --this stops the glow on buttons that have no spellID's, i.e. when switching states and a procced ability is overlapping an empty button
+--		self:StopGlow()
+--	end
 end
 
 

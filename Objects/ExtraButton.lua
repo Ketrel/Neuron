@@ -126,8 +126,10 @@ end
 
 --overwrite function in parent class Button
 function ExtraButton:UpdateIcon()
-	local spellTexture = GetSpellTexture(self.spellID)
-	self.Icon:SetTexture(spellTexture)
+    if self.spellID ~= nil then 
+        local spellTexture = C_Spell.GetSpellTexture(self.spellID)
+        self.Icon:SetTexture(spellTexture)
+    end
 
 	local texture = GetOverrideBarSkin() or "Interface\\ExtraButton\\Default"
 	self.Style:SetTexture(texture)

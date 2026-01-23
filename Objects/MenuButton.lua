@@ -54,9 +54,9 @@ function MenuButton:InitializeButton()
 			self:RegisterEvent("PET_BATTLE_CLOSE")
 		end
 
-		if not Neuron:IsHooked("MoveMicroButtons") then --we need to intercept MoveMicroButtons for during pet battles
-			Neuron:RawHook("MoveMicroButtons", function(...) MenuButton.ModifiedMoveMicroButtons(...) end, true)
-		end
+		--if not Neuron:IsHooked("MoveMicroButtons") then --we need to intercept MoveMicroButtons for during pet battles
+		--	Neuron:RawHook("MoveMicroButtons", function(...) MenuButton.ModifiedMoveMicroButtons(...) end, true)
+		--end
 	end
 
 	if blizzMenuButtons[self.id] then

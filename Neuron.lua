@@ -117,7 +117,7 @@ function Neuron:OnEnable()
 	Neuron:RegisterEvent("PLAYER_ENTERING_WORLD")
 	Neuron:RegisterEvent("SPELLS_CHANGED")
 	Neuron:RegisterEvent("CHARACTER_POINTS_CHANGED")
-	Neuron:RegisterEvent("LEARNED_SPELL_IN_TAB")
+	--Neuron:RegisterEvent("LEARNED_SPELL_IN_TAB")
 
 	Neuron:UpdateStanceStrings()
 
@@ -234,7 +234,7 @@ end
 function Neuron:LoginMessage()
 	--displays a info window on login for either fresh installs or updates
 	if not DB.updateWarning or DB.updateWarning ~= LATEST_VERSION_NUM  then
-		if not IsAddOnLoaded("Masque") then
+		if not C_AddOns.IsAddOnLoaded("Masque") then
 			print(" ")
 			print("    You do not currently have Masque installed or enabled.")
 			print("    Please consider using Masque for enhancing the visual appearance of Neuron's action buttons.")
