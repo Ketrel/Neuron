@@ -223,8 +223,9 @@ function ActionButton:PlaceSpell(action1, action2, spellID)
 			spell = GetSpellInfo(spellID)
 		end
 	else
-		spell,_= GetSpellBookItemName(action1, action2):lower()
-		_,spellID = GetSpellBookItemInfo(action1, action2)
+        print(action1, action2)
+		spell,_= C_SpellBook.GetSpellBookItemName(action1, action2):lower()
+		_,spellID = C_SpellBook.GetSpellBookItemInfo(action1, action2)
 	end
 
 
