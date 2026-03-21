@@ -128,7 +128,11 @@ function Button:SetCooldownTimer(start, duration, enable, modrate, showCountdown
 
 	--if start and start > 0 and duration > 0 and enable > 0 then
 	--if start and start > 0 and duration > 0 and enable == true then
-	if not UnitAffectingCombat('player') and start and type(start) ~= "table" and start > 0 and duration > 0 and enable == true then
+	--if not UnitAffectingCombat('player') and start and type(start) ~= "table" and start > 0 and duration > 0 and enable == true then
+    if issecretvalue(start) or issecrettable(start) then
+        return
+    end
+	if start and type(start) ~= "table" and start > 0 and duration > 0 and enable == true then
 
 		if duration > 2 then --sets non GCD cooldowns
 			if charges and charges > 0 and maxCharges > 1 then
@@ -501,7 +505,12 @@ function Button:UpdateSpellCount()
 	local charges, maxCharges = C_Spell.GetSpellCharges(self.spell)
 	local count = C_Spell.GetSpellCastCount(self.spell)
 
-	if not UnitAffectingCombat('player') and maxCharges and maxCharges > 1 then
+    if issecretvalue(count) or issecrettable(count) then
+        return
+    end
+
+	--if not UnitAffectingCombat('player') and maxCharges and maxCharges > 1 then
+	if maxCharges and maxCharges > 1 then
 		self.Count:SetText(charges)
 	elseif not UnitAffectingCombat('player') and count and count > 0 then
 		self.Count:SetText(count)
@@ -557,8 +566,19 @@ function Button:UpdateSpellCooldown()
 		--local charges, maxCharges, chStart, chDuration, chargemodrate = C_Spell.GetSpellCharges(self.spell)
 		local charges = C_Spell.GetSpellCharges(self.spell)
 
+
         if cooldown then
-            if not UnitAffectingCombat('player') and charges and charges.currentCharges and charges.maxCharges and charges.maxCharges > 0 and charges.currentCharges < charges.maxCharges then
+            if charges and (issecretvalue(charges) or issecrettable(charges)) then
+                return
+            elseif not charges and (issecretvalue(cooldown) or issecrettable(cooldown)) then
+                return
+            end
+
+            if charges and charges.maxCharges and (issecretvalue(charges.maxCharges) or issecrettable(charges.maxCharges)) then
+                return
+            end
+
+            if charges and charges.currentCharges and charges.maxCharges and charges.maxCharges > 0 and charges.currentCharges < charges.maxCharges then
                 --self:SetCooldownTimer(chStart, chDuration, enable, chargemodrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges, maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
                 self:SetCooldownTimer(charges.cooldownStartTime, charges.cooldownDuration, cooldown.isEnabled, charges.chargeModRate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges.charges, charges.maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
             else
