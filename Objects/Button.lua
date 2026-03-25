@@ -578,13 +578,18 @@ function Button:UpdateSpellCooldown()
                 return
             end
 
-            if charges and charges.currentCharges and charges.maxCharges and charges.maxCharges > 0 and charges.currentCharges < charges.maxCharges then
-                --self:SetCooldownTimer(chStart, chDuration, enable, chargemodrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges, maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
-                self:SetCooldownTimer(charges.cooldownStartTime, charges.cooldownDuration, cooldown.isEnabled, charges.chargeModRate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges.charges, charges.maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
-            else
-                --self:SetCooldownTimer(start, duration, enable, modrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha()) --call standard cooldown, handles both abilty cooldowns and GCD
-                self:SetCooldownTimer(cooldown.startTime, cooldown.duration, cooldown.isEnabled, cooldown.modRate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha()) --call standard cooldown, handles both abilty cooldowns and GCD
+            --if charges and charges.currentCharges and charges.maxCharges and charges.maxCharges > 0 and charges.currentCharges < charges.maxCharges then
+            if charges and charges.currentCharges and not (issecretvalue(charges.currentCharges) or issecrettable(charges.currentCharges)) then
+                if charges.maxCharges and charges.maxCharges > 0 and charges.currentCharges < charges.maxCharges then
+                    --self:SetCooldownTimer(chStart, chDuration, enable, chargemodrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges, maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
+                    self:SetCooldownTimer(charges.cooldownStartTime, charges.cooldownDuration, cooldown.isEnabled, charges.chargeModRate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha(), charges.charges, charges.maxCharges) --only evoke charge cooldown (outer border) if charges are present and less than maxCharges (this is the case with the GCD)
+                else
+                    --self:SetCooldownTimer(start, duration, enable, modrate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha()) --call standard cooldown, handles both abilty cooldowns and GCD
+                    self:SetCooldownTimer(cooldown.startTime, cooldown.duration, cooldown.isEnabled, cooldown.modRate, self.bar:GetShowCooldownText(), self.bar:GetCooldownColor1(), self.bar:GetCooldownColor2(), self.bar:GetShowCooldownAlpha()) --call standard cooldown, handles both abilty cooldowns and GCD
 
+                end
+            else
+                return
             end
         else
             --do nothing
@@ -698,11 +703,11 @@ function Button:UpdateUsableAction()
 	if notEnoughMana and self.bar:GetManaColor() then
 		self.Icon:SetVertexColor(self.bar:GetManaColor()[1], self.bar:GetManaColor()[2], self.bar:GetManaColor()[3])
 	elseif isUsable then
-		if self.bar:GetShowRangeIndicator() and IsActionInRange(self.spell, self.unit) == 0 then
-			self.Icon:SetVertexColor(self.bar:GetRangeColor()[1], self.bar:GetRangeColor()[2], self.bar:GetRangeColor()[3])
-		else
+--		if self.bar:GetShowRangeIndicator() and IsActionInRange(self.spell, self.unit) == 0 then
+--			self.Icon:SetVertexColor(self.bar:GetRangeColor()[1], self.bar:GetRangeColor()[2], self.bar:GetRangeColor()[3])
+--		else
 			self.Icon:SetVertexColor(1.0, 1.0, 1.0)
-		end
+--		end
 	else
 		self.Icon:SetVertexColor(0.4, 0.4, 0.4)
 	end
