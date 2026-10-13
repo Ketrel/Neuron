@@ -788,7 +788,7 @@ function ActionButton.ExtractMacroData(macro)
 		elseif abilityOrItem and #abilityOrItem > 0 then
 			if Neuron.itemCache[abilityOrItem:lower()] then --if our abilityOrItem is actually an item in our cache, amend it as such
 				item = abilityOrItem
-			elseif GetItemInfo(abilityOrItem) then
+			elseif C_Item.GetItemInfo(abilityOrItem) then
 				item = abilityOrItem
 			elseif tonumber(abilityOrItem) and GetInventoryItemLink("player", abilityOrItem) then --in case abilityOrItem is a number and corresponds to a valid inventory item
 				item = GetInventoryItemLink("player", abilityOrItem)
@@ -949,11 +949,12 @@ end
 function ActionButton.GetItemAppearance(item)
 	local border = nil
 	---@type number|string|nil
-	local texture = GetItemIcon(item)
+
+	local texture = C_Item.GetItemIconByID(item)
 
 	if not texture then
 		if Neuron.itemCache[item:lower()] then
-			texture = GetItemIcon("item:"..Neuron.itemCache[item:lower()]..":0:0:0:0:0:0:0"--[[@as number]])
+			texture = C_Item.GetItemIcon("item:"..Neuron.itemCache[item:lower()]..":0:0:0:0:0:0:0"--[[@as number]])
 		end
 	end
 
@@ -961,7 +962,7 @@ function ActionButton.GetItemAppearance(item)
 		texture = "INTERFACE\\ICONS\\INV_MISC_QUESTIONMARK"
 	end
 
-	if IsEquippedItem(item) then --makes the border green when item is equipped and dragged to a button
+	if C_Item.IsEquippedItem(item) then --makes the border green when item is equipped and dragged to a button
 		border = {0, 1.0, 0, 0.2}
 	end
 

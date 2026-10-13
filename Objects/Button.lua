@@ -522,7 +522,7 @@ end
 
 ---Updates the buttons "count", i.e. the item stack size
 function Button:UpdateItemCount()
-	local count = GetItemCount(self.item,nil,true)
+	local count = C_Item.GetItemCount(self.item,nil,true)
 
 	if count and count > 1 then
 		self.Count:SetText(count)
@@ -533,7 +533,7 @@ end
 
 
 function Button:UpdateActionCount()
-	local count = GetActionCount(self.actionID)
+	local count = C_Item.GetActionCount(self.actionID)
 
 	if count and count > 0 then
 		self.Count:SetText(count)
@@ -605,7 +605,7 @@ function Button:UpdateItemCooldown()
 		if Neuron.itemCache[self.item:lower()] then
 			start, duration, enable, modrate = C_Container.GetItemCooldown(Neuron.itemCache[self.item:lower()])
 		else
-			local itemID = GetItemInfoInstant(self.item)
+			local itemID = C_Item.GetItemInfoInstant(self.item)
 			start, duration, enable = C_Container.GetItemCooldown(itemID)
 		end
         if enable == 1 then
@@ -666,11 +666,11 @@ function Button:UpdateUsableSpell()
 end
 
 function Button:UpdateUsableItem()
-	local isUsable, notEnoughMana = IsUsableItem(self.item)
+	local isUsable, notEnoughMana = C_Item.IsUsableItem(self.item)
 
 	--for some reason toys don't show as usable items, so this is a workaround for that
 	if not isUsable then
-		local itemID = GetItemInfoInstant(self.item)
+		local itemID = C_Item.GetItemInfoInstant(self.item)
 		if Neuron.isWoWRetail and itemID and PlayerHasToy(itemID) then
 			isUsable = true
 		end
@@ -756,7 +756,7 @@ function Button:UpdateSpellStatus()
 end
 
 function Button:UpdateItemStatus()
-	if IsCurrentItem(self.item) then
+	if C_Item.IsCurrentItem(self.item) then
 		self:SetChecked(true)
 	else
 		self:SetChecked(false)
@@ -858,9 +858,15 @@ function Button:UpdateSpellTooltip()
 end
 
 function Button:UpdateItemTooltip()
-	local name, link = GetItemInfo(self.item)
-    local itemID = GetItemInfoInstant(self.item)
+	local name, link = C_Item.GetItemInfo(self.item)
+    local itemID = C_Item.GetItemInfoInstant(self.item)
     local isToy = false
+
+    if name == nil or link == nil then
+        print("Nil sanity check")
+        print(name)
+        print(link)
+    end
 
     name = name or Neuron.itemCache[self.item:lower()]
     link = link or "item:"..name..":0:0:0:0:0:0:0"
