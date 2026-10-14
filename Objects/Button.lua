@@ -866,6 +866,7 @@ function Button:UpdateItemTooltip()
         print("Nil sanity check")
         print(name)
         print(link)
+        return
     end
 
     name = name or Neuron.itemCache[self.item:lower()]
