@@ -356,7 +356,7 @@ function ActionButton:filter_item(tooltip)
 			for j=0, 19 do -- go through equip slots
 				local itemId = GetInventoryItemID("player",j)
 				if (itemId and itemId ~= 0) then
-					local name,_,_,_,_,_,_,_,equipLoc =  GetItemInfo(itemId)
+					local name,_,_,_,_,_,_,_,equipLoc =  C_Item.GetItemInfo(itemId)
 					if name then
 						repeat -- repeat until true gives breaks of the repeat the functionality of a C continue
 							if tooltip then
@@ -382,7 +382,7 @@ function ActionButton:filter_item(tooltip)
 			for j=1, GetContainerNumSlots(i) do
 				local itemId = GetContainerItemID(i,j)
 				if (itemId) then
-					local name =  GetItemInfo(itemId)
+					local name =  C_Item.GetItemInfo(itemId)
 					--itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
 					--itemEquipLoc, itemIcon, itemSellPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID,
 					--isCraftingReagent = GetItemInfo(itemID or "itemString" or "itemName" or "itemLink")
@@ -505,7 +505,7 @@ function ActionButton:filter_type()
 			for j=0, 19 do -- go through equip slots
 				local itemId = GetInventoryItemID("player",j)
 				if (itemId and itemId ~= 0) then
-					local name,_,_,_,_,itemType,itemSubType,_,equipLoc =  GetItemInfo(itemId)
+					local name,_,_,_,_,itemType,itemSubType,_,equipLoc =  C_Item.GetItemInfo(itemId)
 					repeat -- repeat until true gives breaks of the repeat the functionality of a C continue
 						if (name) then -- match by name
 							local findIn = "worn "..itemType.." "..itemSubType
@@ -524,7 +524,7 @@ function ActionButton:filter_type()
 			for j=1, GetContainerNumSlots(i) do
 				local itemId = GetContainerItemID(i,j)
 				if (itemId) then
-					local name,_,_,_,_,itemType,itemSubType,_,itemSlot =  GetItemInfo(itemId)
+					local name,_,_,_,_,itemType,itemSubType,_,itemSlot =  C_Item.GetItemInfo(itemId)
 					--itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
 					--itemEquipLoc, itemIcon, itemSellPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID,
 					--isCraftingReagent = GetItemInfo(itemID or "itemString" or "itemName" or "itemLink")
@@ -686,7 +686,7 @@ function ActionButton:filter_toy()
 		local favorite = compare(string.lower(arg),"favorite")
 		arg = arg:lower()
 
-		local name= GetItemInfo(arg)
+		local name= C_Item.GetItemInfo(arg)
 
 		if name then
 			data[name] = "item"
@@ -832,7 +832,7 @@ function ActionButton:Flyout_UpdateData(init)
 						button:SetAttribute("prefix", "/use ")
 					end
 
-					local itemname = GetItemInfo(spell)
+					local itemname = C_Item.GetItemInfo(spell)
 
 					button.macroshow = spell
 					button:SetMacroName(itemname)

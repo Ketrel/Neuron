@@ -271,7 +271,7 @@ end
 
 
 function ActionButton:PlaceItem(action1, action2)
-	local item, link = GetItemInfo(action2)
+	local item, link = C_Item.GetItemInfo(action2)
 
 	if link and not Neuron.itemCache[item:lower()] then --add the item to the itemcache if it isn't otherwise in it
 		local _, itemID = link:match("(item:)(%d+)")
@@ -498,7 +498,7 @@ function ActionButton:SetMouseCursor()
 			return
 		end
 
-		PickupItem(GetItemInfoInstant(self.item))
+		PickupItem(C_Item.GetItemInfoInstant(self.item))
 		if GetCursorInfo() then
 			return
 		end
