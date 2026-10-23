@@ -278,7 +278,7 @@ function ActionButton:PlaceItem(action1, action2)
 		Neuron.itemCache[item:lower()] = itemID
 	end
 
-	if IsEquippableItem(item) then
+	if C_Item.IsEquippableItem(item) then
 		self:SetMacroText("/equip "..item.."\n/use "..item)
 	else
 		self:SetMacroText("/use "..item)
