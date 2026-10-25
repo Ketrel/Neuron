@@ -416,18 +416,23 @@ end
 
 function Button:UpdateNormalTexture()
 	local actionTexture, noactionTexture
-
-	if self.__MSQ_NormalSkin and self.__MSQ_NormalSkin.Texture then
-		actionTexture = self.__MSQ_NormalSkin.Texture
-		noactionTexture = self.__MSQ_NormalSkin.Texture.EmptyTexture
-	else
-		actionTexture = "Interface\\Buttons\\UI-Quickslot2"
-		noactionTexture = "Interface\\Buttons\\UI-Quickslot"
-	end
+    
+    if self._MSQ_CFG then
+        _msq = self._MSQ_CFG
+        if _msq.Skin_Normal and _msq.Skin_Normal.Texture then
+            actionTexture = _msq.Skin_Normal.Texture
+            noactionTexture = _msq.EmptyTexture
+        end
+    else
+        actionTexture = "Interface\\Buttons\\UI-Quickslot2"
+        noactionTexture = "Interface\\Buttons\\UI-Quickslot"
+    end
 
 	if self:HasAction() then
 		self:SetNormalTexture(actionTexture or "")
-		self:GetNormalTexture():SetVertexColor(1,1,1,1)
+        if not self._MSQ_CFG then
+            self:GetNormalTexture():SetVertexColor(1,1,1,1)
+        end
 	else
 		self:SetNormalTexture(noactionTexture or "")
 		self:GetNormalTexture():SetVertexColor(1,1,1,0.5)
