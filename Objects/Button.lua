@@ -435,7 +435,9 @@ function Button:UpdateNormalTexture()
         end
 	else
 		self:SetNormalTexture(noactionTexture or "")
-		self:GetNormalTexture():SetVertexColor(1,1,1,0.5)
+        if not self._MSQ_CFG then
+            self:GetNormalTexture():SetVertexColor(1,1,1,0.5)
+        end
 	end
 end
 
