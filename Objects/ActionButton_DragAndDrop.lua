@@ -493,12 +493,12 @@ function ActionButton:SetMouseCursor()
 	end
 
 	if self.item then
-		PickupItem(self.item) --this is to try to catch any stragglers that might not have a spellID on the button. Things like mounts and such. This only works on currently available items
+		C_Item.PickupItem(self.item) --this is to try to catch any stragglers that might not have a spellID on the button. Things like mounts and such. This only works on currently available items
 		if GetCursorInfo() then --if this isn't a normal spell (like a flyout) or it is a pet abiity, revert to a question mark symbol
 			return
 		end
 
-		PickupItem(C_Item.GetItemInfoInstant(self.item))
+		C_Item.PickupItem(C_Item.GetItemInfoInstant(self.item))
 		if GetCursorInfo() then
 			return
 		end
@@ -512,5 +512,5 @@ function ActionButton:SetMouseCursor()
 	end
 
 	--failsafe so there is 'something' on the mouse cursor
-	PickupItem(1217) --questionmark symbol
+	C_Item.PickupItem(1217) --questionmark symbol
 end
